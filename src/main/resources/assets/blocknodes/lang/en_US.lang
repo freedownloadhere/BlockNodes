@@ -1,0 +1,8 @@
+blocknodes.loadscene.commandexception.toomanyargs=Too many arguments in LoadScene!
+blocknodes.loadscene.commandexception.nosuchsceneexists=No such scene exists!
+blocknodes.addscene.commandexception.toomanyargs=Too many arguments in AddScene!
+blocknodes.addscene.commandexception.scenealreadyexists=A Scene with that name already exists!
+blocknodes.addnode.commandexception.toomanyargs=Too many arguments in AddNode!
+blocknodes.addnode.commandexception.nodealreadyexists=A Node with that name already exists!
+blocknodes.addnodeaction.commandexception.nosuchnodeexists=No Node exists at the position provided!
+blocknodes.addnodeaction.commandexception.invalidactiontype=The action type provided is not recognized!
