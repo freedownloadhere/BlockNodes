@@ -15,8 +15,6 @@ import net.minecraftforge.client.ClientCommandHandler;
 import net.minecraftforge.common.MinecraftForge;
 import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
-
-import javax.swing.*;
 import java.util.*;
 
 public class NodeManager implements Observer
@@ -88,7 +86,6 @@ public class NodeManager implements Observer
         if(queryResult != null && !queryResult.equals(CurrentNode))
         {
             Log.Message("EnterNode", queryResult.GetPosition().ToString());
-            ActionQueue.addAll(queryResult.GetActions());
         }
 
         // INSIDE SAME NODE
@@ -102,8 +99,18 @@ public class NodeManager implements Observer
         if(queryResult == null && CurrentNode != null)
         {
             Log.Message("ExitNode", CurrentNode.GetPosition().ToString());
+            CurrentNode.ResetContactTime();
         }
-        
+
+        // FIRST CONTACT
+        if(CurrentNode != null && CurrentNode.Contact())
+        {
+            Log.Message("Contact", CurrentNode.GetPosition().ToString());
+            ActionQueue.addAll(CurrentNode.GetActions());
+        }
+
+        RunNextAction();
+
         CurrentNode = queryResult;
     }
 
@@ -122,15 +129,29 @@ public class NodeManager implements Observer
 
     public boolean AddNodeAction(Vector3i position, String actionType, String[] args)
     {
+        Node affectedNode = CurrentScene.NodeExistsAt(position);
+
         if(actionType.equals("presskey"))
-            return CurrentNode.AddAction(new KeyInputAction(args[0], KeyInputAction.ActionType.PRESS));
+            return affectedNode.AddAction(new KeyInputAction(args[0], KeyInputAction.ActionType.PRESS));
         else if(actionType.equals("releasekey"))
-            return CurrentNode.AddAction(new KeyInputAction(args[0], KeyInputAction.ActionType.RELEASE));
+            return affectedNode.AddAction(new KeyInputAction(args[0], KeyInputAction.ActionType.RELEASE));
         else if(actionType.equals("pressmouse"))
-            return CurrentNode.AddAction(new MouseInputAction(args[0], MouseInputAction.ActionType.PRESS));
+            return affectedNode.AddAction(new MouseInputAction(args[0], MouseInputAction.ActionType.PRESS));
         else if(actionType.equals("releasemouse"))
-            return CurrentNode.AddAction(new MouseInputAction(args[0], MouseInputAction.ActionType.RELEASE));
+            return affectedNode.AddAction(new MouseInputAction(args[0], MouseInputAction.ActionType.RELEASE));
         return false;
+    }
+
+    private void RunNextAction()
+    {
+        if(ActionQueue.isEmpty()) return;
+
+        ActionQueue.getFirst().ExecuteAction();
+
+        Log.Message("ActionQueue", "Executed next action in queue");
+
+        ActionQueue.removeFirst();
+
     }
 
     public Node NodeExistsAt(Vector3i position)

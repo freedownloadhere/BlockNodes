@@ -9,8 +9,8 @@ import java.util.Vector;
 
 public class Node extends Observable
 {
-    private boolean RequiresTriggerTime = false;
-    private int TriggerTimeTicks = 5;
+    private boolean RequiresTriggerTime = true;
+    private int TriggerTimeTicks = 10;
     private int CurrentContactTime = 0;
 
     // Expect Euclidean distance from player center to node center.
@@ -52,7 +52,7 @@ public class Node extends Observable
 
     public boolean Contact()
     {
-        return !RequiresTriggerTime || CurrentContactTime >= TriggerTimeTicks;
+        return !RequiresTriggerTime || CurrentContactTime == TriggerTimeTicks;
     }
 
     public boolean AddAction(NodeAction action)

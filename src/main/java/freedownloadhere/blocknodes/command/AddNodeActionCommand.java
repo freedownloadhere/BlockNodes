@@ -25,7 +25,8 @@ public class AddNodeActionCommand extends CommandBase
     }
 
     @Override
-    public void processCommand(ICommandSender sender, String[] args) throws CommandException {
+    public void processCommand(ICommandSender sender, String[] args) throws CommandException
+    {
         Vector3i position = PlayerPosHelper.StringToVector3i(args[0], args[1], args[2]);
 
         if(NodeManager.GetInstance().NodeExistsAt(position) == null)

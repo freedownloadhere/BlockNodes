@@ -13,5 +13,7 @@ public abstract class NodeAction
         catch(Exception e) { System.out.println(e.getCause().getMessage()); }
     }
 
-    public void ExecuteAction() { }
+    public abstract void ExecuteAction();
+
+    // public abstract String ToString();
 }

@@ -10,7 +10,7 @@ public class KeyInputAction extends NodeAction
     public enum ActionType
     {
         PRESS,
-        RELEASE;
+        RELEASE
     }
     private ActionType Type;
     private int Key;
@@ -37,9 +37,8 @@ public class KeyInputAction extends NodeAction
     @Override
     public void ExecuteAction()
     {
-        if(Type == ActionType.PRESS)
-            InputHandler.keyPress(Key);
-        else
+        InputHandler.keyPress(Key);
+        if(Type == ActionType.RELEASE)
             InputHandler.keyRelease(Key);
     }
 }
