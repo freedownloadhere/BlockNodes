@@ -1,9 +1,8 @@
 package freedownloadhere.blocknodes.node;
 
-import freedownloadhere.blocknodes.command.AddNodeActionCommand;
-import freedownloadhere.blocknodes.command.AddNodeCommand;
-import freedownloadhere.blocknodes.command.AddSceneCommand;
-import freedownloadhere.blocknodes.command.LoadSceneCommand;
+import freedownloadhere.blocknodes.command.*;
+import freedownloadhere.blocknodes.loaders.SceneLoader;
+import freedownloadhere.blocknodes.loaders.SceneSaver;
 import freedownloadhere.blocknodes.node.action.KeyInputAction;
 import freedownloadhere.blocknodes.node.action.MouseInputAction;
 import freedownloadhere.blocknodes.node.action.NodeAction;
@@ -17,13 +16,14 @@ import net.minecraftforge.fml.common.eventhandler.SubscribeEvent;
 import net.minecraftforge.fml.common.gameevent.TickEvent;
 import java.util.*;
 
-public class NodeManager implements Observer
+public class NodeManager
 {
     private static NodeManager Instance;
     private final HashMap<String, NodeScene> LoadedNodeScenes;
+    private final LinkedList<NodeAction> ActionQueue;
+
     private NodeScene CurrentScene;
     private Node CurrentNode;
-    private LinkedList<NodeAction> ActionQueue;
 
     public static void Instantiate()
     {
@@ -33,7 +33,9 @@ public class NodeManager implements Observer
         MouseInputAction.Instantiate();
 
         ClientCommandHandler.instance.registerCommand(new AddSceneCommand());
+        ClientCommandHandler.instance.registerCommand(new SetSceneCommand());
         ClientCommandHandler.instance.registerCommand(new LoadSceneCommand());
+        ClientCommandHandler.instance.registerCommand(new SaveSceneCommand());
         ClientCommandHandler.instance.registerCommand(new AddNodeCommand());
         ClientCommandHandler.instance.registerCommand(new AddNodeActionCommand());
         MinecraftForge.EVENT_BUS.register(Instance);
@@ -55,22 +57,35 @@ public class NodeManager implements Observer
             LoadedNodeScenes.put(name, new NodeScene(name));
             return true;
         }
-        else
-        {
-            return false;
-        }
+
+        return false;
     }
-    public boolean LoadScene(String name)
+    public boolean SetScene(String name)
     {
         if(LoadedNodeScenes.containsKey(name))
         {
             CurrentScene = LoadedNodeScenes.get(name);
             return true;
         }
-        else
-        {
+
+        return false;
+    }
+    public boolean LoadScene(String name)
+    {
+        NodeScene loadedScene = SceneLoader.LoadScene(name);
+        if(loadedScene == null)
             return false;
-        }
+
+        LoadedNodeScenes.put(name, loadedScene);
+        return true;
+    }
+    public boolean SaveScene(String name)
+    {
+        if (!LoadedNodeScenes.containsKey(name))
+            return false;
+
+        SceneSaver.SaveScene(LoadedNodeScenes.get(name));
+        return true;
     }
 
     @SubscribeEvent
@@ -157,11 +172,5 @@ public class NodeManager implements Observer
     public Node NodeExistsAt(Vector3i position)
     {
         return CurrentScene.NodeExistsAt(position);
-    }
-
-    @Override
-    public void update(Observable o, Object arg)
-    {
-
     }
 }

@@ -7,8 +7,8 @@ import java.util.HashMap;
 
 public class NodeScene
 {
-    private HashMap<Integer, Node> Nodes;
     private String Name;
+    private HashMap<Integer, Node> Nodes;
 
     public NodeScene(String name)
     {
@@ -30,5 +30,10 @@ public class NodeScene
     {
         if(!Nodes.containsKey(position.Hash())) return null;
         return Nodes.get(position.Hash());
+    }
+
+    public String getName()
+    {
+        return Name;
     }
 }

@@ -6,11 +6,11 @@ import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
 
-public class LoadSceneCommand extends CommandBase
+public class SaveSceneCommand extends CommandBase
 {
     @Override
     public String getCommandName() {
-        return "loadscene";
+        return "savescene";
     }
 
     @Override
@@ -24,10 +24,10 @@ public class LoadSceneCommand extends CommandBase
         if(args.length != 1)
             throw new CommandException("blocknodes.loadscene.commandexception.toomanyargs", (Object) args);
 
-        if(!NodeManager.GetInstance().LoadScene(args[0]))
+        if(!NodeManager.GetInstance().SaveScene(args[0]))
             throw new CommandException("blocknodes.loadscene.commandexception.nosuchsceneexists", (Object) args);
 
-        Log.Message("LoadScene", "Loaded scene with name: " + args[0]);
+        Log.Message("SaveScene", "Saved scene with name: " + args[0]);
     }
 
     @Override

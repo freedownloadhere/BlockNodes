@@ -4,7 +4,7 @@ import freedownloadhere.blocknodes.utils.Log;
 
 import java.awt.*;
 
-public abstract class NodeAction
+public class NodeAction
 {
     static Robot InputHandler;
     public static void Instantiate()
@@ -13,7 +13,9 @@ public abstract class NodeAction
         catch(Exception e) { System.out.println(e.getCause().getMessage()); }
     }
 
-    public abstract void ExecuteAction();
+    public NodeAction() { }
+
+    public void ExecuteAction() { }
 
     // public abstract String ToString();
 }
