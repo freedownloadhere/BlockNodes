@@ -22,10 +22,10 @@ public class SetSceneCommand extends CommandBase
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if(args.length != 1)
-            throw new CommandException("blocknodes.loadscene.commandexception.toomanyargs", (Object) args);
+            throw new CommandException("blocknodes.commandexception.toomanyargs", (Object) args);
 
         if(!NodeManager.GetInstance().SetScene(args[0]))
-            throw new CommandException("blocknodes.loadscene.commandexception.nosuchsceneexists", (Object) args);
+            throw new CommandException("blocknodes.commandexception.nosuchsceneexists", (Object) args);
 
         Log.Message("SetScene", "Set the current Scene to: " + args[0]);
     }

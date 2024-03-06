@@ -1,36 +1,56 @@
 package freedownloadhere.blocknodes.node.action;
 
+import com.google.gson.annotations.SerializedName;
+
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
 public class KeyInputAction extends NodeAction
 {
-    public static HashMap<String, Integer> KeycodeMap;
+    public static HashMap<String, Integer> StringToKeycode;
+    public static HashMap<Integer, String> KeycodeToString;
 
     public enum ActionType
     {
-        PRESS,
-        RELEASE
+        PRESS("Press Key"),
+        RELEASE("Release Key");
+
+        String Name;
+        ActionType(String name)
+        {
+            Name = name;
+        }
     }
+
+    //@SerializedName("type")
     private ActionType Type;
+    //@SerializedName("key")
     private int Key;
+    private String KeyName;
 
     public static void Instantiate()
     {
-        KeycodeMap = new HashMap<String, Integer>();
+        StringToKeycode = new HashMap<String, Integer>();
+        KeycodeToString = new HashMap<Integer, String>();
 
         for(char key = KeyEvent.VK_A; key <= KeyEvent.VK_Z; key++)
-            KeycodeMap.put("" + key, (int)key);
+        {
+            StringToKeycode.put("" + key, (int)key);
+            KeycodeToString.put((int)key, "" + key);
+        }
     }
+
     public KeyInputAction(int key, ActionType type)
     {
-        Key = key;
         Type = type;
+        Key = key;
+        KeyName = KeycodeToString.get(key);
     }
     public KeyInputAction(String name, ActionType type)
     {
-        Key = KeycodeMap.get(name);
         Type = type;
+        Key = StringToKeycode.get(name);
+        KeyName = name;
     }
     private KeyInputAction() { }
 
@@ -40,5 +60,11 @@ public class KeyInputAction extends NodeAction
         InputHandler.keyPress(Key);
         if(Type == ActionType.RELEASE)
             InputHandler.keyRelease(Key);
+    }
+
+    @Override
+    public String ToString()
+    {
+        return Type.Name + " " + KeyName;
     }
 }

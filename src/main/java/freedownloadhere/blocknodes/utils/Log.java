@@ -24,4 +24,14 @@ public class Log
                 )
         );
     }
+
+    public static void Action(String message)
+    {
+        Minecraft.getMinecraft().thePlayer.addChatComponentMessage(
+                new ChatComponentText(
+                        "\u00A73\u00A7l[\u00A73Action\u00A73\u00A7l]\u00A7r "
+                                + message
+                )
+        );
+    }
 }

@@ -30,10 +30,10 @@ public class AddNodeActionCommand extends CommandBase
         Vector3i position = PlayerPosHelper.StringToVector3i(args[0], args[1], args[2]);
 
         if(NodeManager.GetInstance().NodeExistsAt(position) == null)
-            throw new CommandException("blocknodes.addnodeaction.commandexception.nosuchnodeexists", (Object) args);
+            throw new CommandException("blocknodes.commandexception.nosuchnodeexists", (Object) args);
 
         if(!NodeManager.GetInstance().AddNodeAction(position, args[3], new String[]{args[4]}))
-            throw new CommandException("blocknodes.addnodeaction.commandexception.invalidactiontype", (Object) args);
+            throw new CommandException("blocknodes.commandexception.invalidactiontype", (Object) args);
 
         Log.Message("AddNode", "Added action " + args[3] + " " + args[4] + " to node " + position.ToString());
     }

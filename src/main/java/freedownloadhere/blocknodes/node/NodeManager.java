@@ -1,11 +1,10 @@
 package freedownloadhere.blocknodes.node;
 
 import freedownloadhere.blocknodes.command.*;
-import freedownloadhere.blocknodes.loaders.SceneLoader;
-import freedownloadhere.blocknodes.loaders.SceneSaver;
 import freedownloadhere.blocknodes.node.action.KeyInputAction;
 import freedownloadhere.blocknodes.node.action.MouseInputAction;
 import freedownloadhere.blocknodes.node.action.NodeAction;
+import freedownloadhere.blocknodes.scenepersistence.ScenePersistenceManager;
 import freedownloadhere.blocknodes.utils.Log;
 import freedownloadhere.blocknodes.utils.PlayerPosHelper;
 import freedownloadhere.blocknodes.utils.Vector3i;
@@ -72,7 +71,7 @@ public class NodeManager
     }
     public boolean LoadScene(String name)
     {
-        NodeScene loadedScene = SceneLoader.LoadScene(name);
+        NodeScene loadedScene = ScenePersistenceManager.LoadScene(name);
         if(loadedScene == null)
             return false;
 
@@ -84,7 +83,7 @@ public class NodeManager
         if (!LoadedNodeScenes.containsKey(name))
             return false;
 
-        SceneSaver.SaveScene(LoadedNodeScenes.get(name));
+        ScenePersistenceManager.SaveScene(LoadedNodeScenes.get(name));
         return true;
     }
 
@@ -163,7 +162,7 @@ public class NodeManager
 
         ActionQueue.getFirst().ExecuteAction();
 
-        Log.Message("ActionQueue", "Executed next action in queue");
+        Log.Action(ActionQueue.getFirst().ToString());
 
         ActionQueue.removeFirst();
 

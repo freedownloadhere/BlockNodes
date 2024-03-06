@@ -22,10 +22,10 @@ public class AddSceneCommand extends CommandBase
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if(args.length != 1)
-            throw new CommandException("blocknodes.addscene.commandexception.toomanyargs", (Object) args);
+            throw new CommandException("blocknodes.commandexception.toomanyargs", (Object) args);
 
         if(!NodeManager.GetInstance().AddEmptyScene(args[0]))
-            throw new CommandException("blocknodes.addscene.commandexception.scenealreadyexists", (Object) args);
+            throw new CommandException("blocknodes.commandexception.scenealreadyexists", (Object) args);
 
         Log.Message("AddScene","Added new empty scene " + args[0]);
     }

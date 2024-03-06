@@ -22,10 +22,10 @@ public class SaveSceneCommand extends CommandBase
     public void processCommand(ICommandSender sender, String[] args) throws CommandException
     {
         if(args.length != 1)
-            throw new CommandException("blocknodes.loadscene.commandexception.toomanyargs", (Object) args);
+            throw new CommandException("blocknodes.commandexception.toomanyargs", (Object) args);
 
         if(!NodeManager.GetInstance().SaveScene(args[0]))
-            throw new CommandException("blocknodes.loadscene.commandexception.nosuchsceneexists", (Object) args);
+            throw new CommandException("blocknodes.commandexception.nosuchsceneexists", (Object) args);
 
         Log.Message("SaveScene", "Saved scene with name: " + args[0]);
     }
