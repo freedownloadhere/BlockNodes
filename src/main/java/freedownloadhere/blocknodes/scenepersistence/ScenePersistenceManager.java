@@ -6,7 +6,6 @@ import freedownloadhere.blocknodes.node.NodeScene;
 import freedownloadhere.blocknodes.node.action.KeyInputAction;
 import freedownloadhere.blocknodes.node.action.MouseInputAction;
 import freedownloadhere.blocknodes.node.action.NodeAction;
-import freedownloadhere.blocknodes.utils.gson.JsonDeserializerWithInheritance;
 import freedownloadhere.blocknodes.utils.gson.RuntimeTypeAdapterFactory;
 
 import java.io.File;
