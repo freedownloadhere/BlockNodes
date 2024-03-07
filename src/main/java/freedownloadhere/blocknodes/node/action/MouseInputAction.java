@@ -22,13 +22,11 @@ public class MouseInputAction extends NodeAction
         }
     }
 
-    //@SerializedName("type")
     private ActionType Type;
-    //@SerializedName("button")
     private int Button;
     private String ButtonName;
 
-    public static void Instantiate()
+    public static void Initialize()
     {
         StringToButton = new HashMap<String, Integer>();
         ButtonToString = new HashMap<Integer, String>();

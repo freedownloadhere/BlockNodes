@@ -1,13 +1,9 @@
 package freedownloadhere.blocknodes.command;
 
-import freedownloadhere.blocknodes.node.Node;
-import freedownloadhere.blocknodes.node.NodeManager;
-import freedownloadhere.blocknodes.node.action.KeyInputAction;
-import freedownloadhere.blocknodes.node.action.MouseInputAction;
+import freedownloadhere.blocknodes.managers.NodeManager;
 import freedownloadhere.blocknodes.utils.Log;
 import freedownloadhere.blocknodes.utils.PlayerPosHelper;
 import freedownloadhere.blocknodes.utils.Vector3i;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -35,7 +31,7 @@ public class AddNodeActionCommand extends CommandBase
         if(!NodeManager.GetInstance().AddNodeAction(position, args[3], new String[]{args[4]}))
             throw new CommandException("blocknodes.commandexception.invalidactiontype", (Object) args);
 
-        Log.Message("AddNode", "Added action " + args[3] + " " + args[4] + " to node " + position.ToString());
+        Log.Command("AddNode", "Added Action: \u00A7e" + args[3] + " " + args[4] + "\u00A7r to Node: \u00A7e" + position.ToString());
     }
 
     @Override

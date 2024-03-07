@@ -1,7 +1,10 @@
-package freedownloadhere.blocknodes.node;
+package freedownloadhere.blocknodes.managers;
 
 import freedownloadhere.blocknodes.command.*;
+import freedownloadhere.blocknodes.node.Node;
+import freedownloadhere.blocknodes.node.NodeScene;
 import freedownloadhere.blocknodes.node.action.KeyInputAction;
+import freedownloadhere.blocknodes.node.action.KeybindingInputAction;
 import freedownloadhere.blocknodes.node.action.MouseInputAction;
 import freedownloadhere.blocknodes.node.action.NodeAction;
 import freedownloadhere.blocknodes.scenepersistence.ScenePersistenceManager;
@@ -27,9 +30,10 @@ public class NodeManager
     public static void Instantiate()
     {
         Instance = new NodeManager();
-        NodeAction.Instantiate();
-        KeyInputAction.Instantiate();
-        MouseInputAction.Instantiate();
+        NodeAction.Initialize();
+        KeyInputAction.Initialize();
+        MouseInputAction.Initialize();
+        KeybindingInputManager.Initialize();
 
         ClientCommandHandler.instance.registerCommand(new AddSceneCommand());
         ClientCommandHandler.instance.registerCommand(new SetSceneCommand());
@@ -37,6 +41,7 @@ public class NodeManager
         ClientCommandHandler.instance.registerCommand(new SaveSceneCommand());
         ClientCommandHandler.instance.registerCommand(new AddNodeCommand());
         ClientCommandHandler.instance.registerCommand(new AddNodeActionCommand());
+        ClientCommandHandler.instance.registerCommand(new KBIMCommand());
         MinecraftForge.EVENT_BUS.register(Instance);
     }
     public static NodeManager GetInstance()
@@ -45,8 +50,8 @@ public class NodeManager
     }
     private NodeManager()
     {
-        LoadedNodeScenes = new HashMap<String, NodeScene>();
-        ActionQueue = new LinkedList<NodeAction>();
+        LoadedNodeScenes = new HashMap<>();
+        ActionQueue = new LinkedList<>();
     }
 
     public boolean AddEmptyScene(String name)
@@ -57,6 +62,7 @@ public class NodeManager
             return true;
         }
 
+        Log.Error("Scene: \u00A7e " + name + "\u00A7r already exists!");
         return false;
     }
     public boolean SetScene(String name)
@@ -67,13 +73,17 @@ public class NodeManager
             return true;
         }
 
+        Log.Error("Scene: \u00A7e " + name + "\u00A7r does not exist!");
         return false;
     }
     public boolean LoadScene(String name)
     {
         NodeScene loadedScene = ScenePersistenceManager.LoadScene(name);
         if(loadedScene == null)
+        {
+            Log.Error("Scene: \u00A7e " + name + "\u00A7r could not be loaded!");
             return false;
+        }
 
         LoadedNodeScenes.put(name, loadedScene);
         return true;
@@ -81,49 +91,58 @@ public class NodeManager
     public boolean SaveScene(String name)
     {
         if (!LoadedNodeScenes.containsKey(name))
+        {
+            Log.Error("Scene: \u00A7e " + name + "\u00A7r cannot be saved, as it does not exist!");
             return false;
+        }
 
         ScenePersistenceManager.SaveScene(LoadedNodeScenes.get(name));
         return true;
     }
 
-    @SubscribeEvent
-    public void UpdateLoop(TickEvent.ClientTickEvent e)
+    public void Update()
     {
-        if(Minecraft.getMinecraft().theWorld == null || Minecraft.getMinecraft().thePlayer == null) return;
         if(CurrentScene == null) return;
-        if(e.phase != TickEvent.Phase.END) return;
+        UpdateManagers();
+        UpdateEvents();
+        RunNextAction();
+    }
 
+    private void UpdateManagers()
+    {
+        KeybindingInputManager.Update();
+    }
+
+    private void UpdateEvents()
+    {
         Node queryResult = CurrentScene.NodeExistsAt(PlayerPosHelper.ToVector3i());
 
         // JUST ENTERED NODE
         if(queryResult != null && !queryResult.equals(CurrentNode))
         {
-            Log.Message("EnterNode", queryResult.GetPosition().ToString());
+            Log.Event("EnterNode", queryResult.GetPosition().ToString());
         }
 
         // INSIDE SAME NODE
         if(queryResult != null && queryResult.equals(CurrentNode))
         {
-            Log.Message("InsideNode", CurrentNode.GetPosition().ToString());
+            Log.Event("InsideNode", CurrentNode.GetPosition().ToString());
             CurrentNode.IncrementContactTime();
         }
 
         // EXITED NODE
         if(queryResult == null && CurrentNode != null)
         {
-            Log.Message("ExitNode", CurrentNode.GetPosition().ToString());
+            Log.Event("ExitNode", CurrentNode.GetPosition().ToString());
             CurrentNode.ResetContactTime();
         }
 
         // FIRST CONTACT
         if(CurrentNode != null && CurrentNode.Contact())
         {
-            Log.Message("Contact", CurrentNode.GetPosition().ToString());
+            Log.Event("Contact", CurrentNode.GetPosition().ToString());
             ActionQueue.addAll(CurrentNode.GetActions());
         }
-
-        RunNextAction();
 
         CurrentNode = queryResult;
     }
@@ -145,15 +164,23 @@ public class NodeManager
     {
         Node affectedNode = CurrentScene.NodeExistsAt(position);
 
-        if(actionType.equals("presskey"))
-            return affectedNode.AddAction(new KeyInputAction(args[0], KeyInputAction.ActionType.PRESS));
-        else if(actionType.equals("releasekey"))
-            return affectedNode.AddAction(new KeyInputAction(args[0], KeyInputAction.ActionType.RELEASE));
-        else if(actionType.equals("pressmouse"))
-            return affectedNode.AddAction(new MouseInputAction(args[0], MouseInputAction.ActionType.PRESS));
-        else if(actionType.equals("releasemouse"))
-            return affectedNode.AddAction(new MouseInputAction(args[0], MouseInputAction.ActionType.RELEASE));
-        return false;
+        switch (actionType)
+        {
+            case "presskey":
+                return affectedNode.AddAction(new KeyInputAction(args[0], KeyInputAction.ActionType.PRESS));
+            case "releasekey":
+                return affectedNode.AddAction(new KeyInputAction(args[0], KeyInputAction.ActionType.RELEASE));
+            case "pressmouse":
+                return affectedNode.AddAction(new MouseInputAction(args[0], MouseInputAction.ActionType.PRESS));
+            case "releasemouse":
+                return affectedNode.AddAction(new MouseInputAction(args[0], MouseInputAction.ActionType.RELEASE));
+            case "holdkeybinding":
+                return affectedNode.AddAction(new KeybindingInputAction(args[0], KeybindingInputAction.ActionType.HOLD));
+            case "releasekeybinding":
+                return affectedNode.AddAction(new KeybindingInputAction(args[0], KeybindingInputAction.ActionType.RELEASE));
+            default:
+                return false;
+        }
     }
 
     private void RunNextAction()
@@ -165,7 +192,6 @@ public class NodeManager
         Log.Action(ActionQueue.getFirst().ToString());
 
         ActionQueue.removeFirst();
-
     }
 
     public Node NodeExistsAt(Vector3i position)

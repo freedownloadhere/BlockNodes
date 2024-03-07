@@ -1,10 +1,9 @@
 package freedownloadhere.blocknodes.command;
 
-import freedownloadhere.blocknodes.node.NodeManager;
+import freedownloadhere.blocknodes.managers.NodeManager;
 import freedownloadhere.blocknodes.utils.Log;
 import freedownloadhere.blocknodes.utils.PlayerPosHelper;
 import freedownloadhere.blocknodes.utils.Vector3i;
-import net.minecraft.client.Minecraft;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
 import net.minecraft.command.ICommandSender;
@@ -31,7 +30,7 @@ public class AddNodeCommand extends CommandBase
         if(!NodeManager.GetInstance().AddNode(position))
             throw new CommandException("blocknodes.commandexception.nodealreadyexists", (Object) args);
 
-        Log.Message("AddNode","Added new empty node: " + position.ToString());
+        Log.Command("AddNode","Added new empty Node: \u00A7e" + position.ToString());
     }
 
     @Override

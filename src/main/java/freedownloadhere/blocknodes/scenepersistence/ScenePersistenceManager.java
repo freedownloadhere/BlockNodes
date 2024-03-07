@@ -4,6 +4,7 @@ import com.google.gson.Gson;
 import com.google.gson.GsonBuilder;
 import freedownloadhere.blocknodes.node.NodeScene;
 import freedownloadhere.blocknodes.node.action.KeyInputAction;
+import freedownloadhere.blocknodes.node.action.KeybindingInputAction;
 import freedownloadhere.blocknodes.node.action.MouseInputAction;
 import freedownloadhere.blocknodes.node.action.NodeAction;
 import freedownloadhere.blocknodes.utils.gson.RuntimeTypeAdapterFactory;
@@ -20,7 +21,8 @@ public class ScenePersistenceManager
             RuntimeTypeAdapterFactory.of(NodeAction.class)
             .registerSubtype(NodeAction.class)
             .registerSubtype(KeyInputAction.class)
-            .registerSubtype(MouseInputAction.class);
+            .registerSubtype(MouseInputAction.class)
+            .registerSubtype(KeybindingInputAction.class);
 
     private ScenePersistenceManager() { }
 

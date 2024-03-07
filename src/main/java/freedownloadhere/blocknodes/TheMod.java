@@ -1,6 +1,6 @@
 package freedownloadhere.blocknodes;
 
-import freedownloadhere.blocknodes.node.NodeManager;
+import freedownloadhere.blocknodes.managers.NodeManager;
 import freedownloadhere.blocknodes.utils.References;
 import net.minecraftforge.fml.common.Mod;
 import net.minecraftforge.fml.common.event.FMLInitializationEvent;
@@ -16,7 +16,7 @@ public class TheMod
     @Mod.EventHandler
     public void Init(FMLInitializationEvent e)
     {
-        NodeManager.Instantiate();
+        Root.Begin();
     }
 
     @Mod.EventHandler

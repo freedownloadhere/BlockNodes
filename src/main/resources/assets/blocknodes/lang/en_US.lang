@@ -1,5 +1,6 @@
 blocknodes.commandexception.toomanyargs=Too many arguments provided!
 blocknodes.commandexception.notenoughargs=Not enough arguments provided!
+blocknodes.commandexception.invalidargs=Invalid arguments provided!
 
 blocknodes.commandexception.nosuchsceneexists=No such Scene exists!
 blocknodes.commandexception.scenealreadyexists=A Scene with that name already exists!

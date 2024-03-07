@@ -1,6 +1,6 @@
 package freedownloadhere.blocknodes.command;
 
-import freedownloadhere.blocknodes.node.NodeManager;
+import freedownloadhere.blocknodes.managers.NodeManager;
 import freedownloadhere.blocknodes.utils.Log;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -27,7 +27,7 @@ public class AddSceneCommand extends CommandBase
         if(!NodeManager.GetInstance().AddEmptyScene(args[0]))
             throw new CommandException("blocknodes.commandexception.scenealreadyexists", (Object) args);
 
-        Log.Message("AddScene","Added new empty scene " + args[0]);
+        Log.Command("AddScene","Added new empty Scene: \u00A7e" + args[0]);
     }
 
     @Override

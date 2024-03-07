@@ -1,7 +1,9 @@
 package freedownloadhere.blocknodes.node.action;
 
 import com.google.gson.annotations.SerializedName;
+import net.minecraft.client.settings.KeyBinding;
 
+import javax.swing.text.JTextComponent;
 import java.awt.event.KeyEvent;
 import java.util.HashMap;
 
@@ -22,13 +24,11 @@ public class KeyInputAction extends NodeAction
         }
     }
 
-    //@SerializedName("type")
     private ActionType Type;
-    //@SerializedName("key")
     private int Key;
     private String KeyName;
 
-    public static void Instantiate()
+    public static void Initialize()
     {
         StringToKeycode = new HashMap<String, Integer>();
         KeycodeToString = new HashMap<Integer, String>();
@@ -57,9 +57,13 @@ public class KeyInputAction extends NodeAction
     @Override
     public void ExecuteAction()
     {
-        InputHandler.keyPress(Key);
+        KeyBinding.setKeyBindState(Key, true);
         if(Type == ActionType.RELEASE)
-            InputHandler.keyRelease(Key);
+            KeyBinding.setKeyBindState(Key, false);
+
+        //InputHandler.keyPress(Key);
+        //if(Type == ActionType.RELEASE)
+            //InputHandler.keyRelease(Key);
     }
 
     @Override

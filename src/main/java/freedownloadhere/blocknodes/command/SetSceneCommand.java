@@ -1,6 +1,6 @@
 package freedownloadhere.blocknodes.command;
 
-import freedownloadhere.blocknodes.node.NodeManager;
+import freedownloadhere.blocknodes.managers.NodeManager;
 import freedownloadhere.blocknodes.utils.Log;
 import net.minecraft.command.CommandBase;
 import net.minecraft.command.CommandException;
@@ -27,7 +27,7 @@ public class SetSceneCommand extends CommandBase
         if(!NodeManager.GetInstance().SetScene(args[0]))
             throw new CommandException("blocknodes.commandexception.nosuchsceneexists", (Object) args);
 
-        Log.Message("SetScene", "Set the current Scene to: " + args[0]);
+        Log.Command("SetScene", "Set the current Scene to: \u00A7e" + args[0]);
     }
 
     @Override
